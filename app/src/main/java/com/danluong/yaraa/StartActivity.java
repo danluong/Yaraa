@@ -1,9 +1,12 @@
 package com.danluong.yaraa;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+
+import com.danluong.yaraa.views.IntroActivity;
+import com.danluong.yaraa.views.MainActivity;
 
 
 public class StartActivity extends ActionBarActivity {
@@ -11,28 +14,18 @@ public class StartActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_start, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // show IntroActivity only on first launch
+        SharedPreferences settings = getSharedPreferences("prefs", 0);
+        boolean firstRun = settings.getBoolean("firstRun", true);
+        Intent intent;
+        if ( firstRun )
+        {
+            intent = new Intent(this, IntroActivity.class);
+        } else {
+            intent = new Intent(this, MainActivity.class);
         }
-
-        return super.onOptionsItemSelected(item);
+        startActivity(intent);
+        finish();
     }
+
 }
