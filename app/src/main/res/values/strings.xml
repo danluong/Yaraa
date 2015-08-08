@@ -7,4 +7,6 @@
     <string name="title_activity_onboard">OnboardActivity</string>
     <string name="title_activity_intro">IntroActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="button_text_listarticles">New Button</string>
+    <string name="title_activity_article_list">ArticleListActivity</string>
 </resources>

@@ -1,19 +1,30 @@
 package com.danluong.yaraa.views;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.danluong.yaraa.R;
 
-public class MainActivity extends ActionBarActivity {
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme); // set to override splashscreen theme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.button_list_articles)
+    public void showArticleList(){
+        Intent intent = new Intent(getApplicationContext(), ArticleListActivity.class);
+        startActivity(intent);
     }
 
     @Override
