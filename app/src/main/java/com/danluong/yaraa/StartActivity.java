@@ -14,7 +14,12 @@ public class StartActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_start);
         // show IntroActivity only on first launch
+        switchActivity();
+    }
+
+    void switchActivity(){
         SharedPreferences settings = getSharedPreferences("prefs", 0);
         boolean firstRun = settings.getBoolean("firstRun", true);
         Intent intent;
@@ -27,5 +32,4 @@ public class StartActivity extends ActionBarActivity {
         startActivity(intent);
         finish();
     }
-
 }
