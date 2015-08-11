@@ -37,7 +37,7 @@ public class Data_ {
     private String thumbnail;
     private String subredditId;
     private boolean hideScore;
-    private boolean edited;
+//    private boolean edited;
     private Object linkFlairCssClass;
     private String authorFlairCssClass;
     private int downs;
@@ -572,18 +572,18 @@ public class Data_ {
      * @return
      *     The edited
      */
-    public boolean isEdited() {
-        return edited;
-    }
+//    public boolean isEdited() {
+//        return edited;
+//    }
 
     /**
      * 
      * @param edited
      *     The edited
      */
-    public void setEdited(boolean edited) {
-        this.edited = edited;
-    }
+//    public void setEdited(boolean edited) {
+//        this.edited = edited;
+//    }
 
     /**
      * 

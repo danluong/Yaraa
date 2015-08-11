@@ -5,10 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.danluong.yaraa.R;
+import com.danluong.yaraa.adapters.ChildAdapter;
 import com.danluong.yaraa.apis.RedditApi;
 import com.danluong.yaraa.models.listing.Child;
 import com.danluong.yaraa.models.listing.Listing;
@@ -29,8 +29,7 @@ public class ArticleListActivity extends AppCompatActivity {
 
     RedditApi mRedditApi;
     List<Child> mArticleList = new ArrayList<>();
-    List<String> mArticleTitleList = new ArrayList<>();
-    ArrayAdapter<String> mAdapter;
+    ChildAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +37,8 @@ public class ArticleListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
 
-        mAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, mArticleTitleList);
+        mAdapter = new ChildAdapter(this, mArticleList);
+
         listview.setAdapter(mAdapter);
 
         mRedditApi = new RedditApi();
@@ -53,19 +52,15 @@ public class ArticleListActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(ArticleListActivity.class.toString(), "RetrofitError error: " + error.getResponse().getReason().toString());
+                Log.d(ArticleListActivity.class.toString(), "RetrofitError error: " + error.getResponse().getReason());
             }
         });
 
     }
 
-    void updateListView(List<Child> articleList){
-        if(!articleList.isEmpty()) {
-            for (Child child : articleList) {
-                mArticleTitleList.add(child.getData().getTitle());
-            }
-            mAdapter.notifyDataSetChanged();
-        }
+    void updateListView(List<Child> articleList) {
+        mAdapter.addAll(articleList);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
