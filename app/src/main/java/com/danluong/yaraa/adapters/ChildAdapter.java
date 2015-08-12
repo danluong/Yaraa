@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.danluong.yaraa.R;
 import com.danluong.yaraa.models.listing.Child;
 
@@ -25,9 +27,11 @@ public class ChildAdapter extends ArrayAdapter<Child> {
 
     // View lookup cache
     static class ViewHolder {
-        @Bind(R.id.textview_heading)
+        @Bind(R.id.listview_item_imageView)
+        ImageView image;
+        @Bind(R.id.listview_item_textview_heading)
         TextView title;
-        @Bind(R.id.textview_subheading)
+        @Bind(R.id.listview_item_textview_subheading)
         TextView author;
 
         public ViewHolder(View view) {
@@ -51,6 +55,11 @@ public class ChildAdapter extends ArrayAdapter<Child> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
+        Glide.with(getContext())
+                .load(element.getData().getThumbnail())
+                .centerCrop()
+                .crossFade()
+                .into(viewHolder.image);
         viewHolder.title.setText(element.getData().getTitle());
         viewHolder.author.setText(element.getData().getAuthor());
         // Return the completed view to render on screen
