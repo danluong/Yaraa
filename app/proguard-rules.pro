@@ -36,9 +36,16 @@
     @com.squareup.otto.Produce public *;
 }
 
+<<<<<<< HEAD
 #Glide includes
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
     **[] $VALUES;
     public *;
 }
+=======
+# Allow obfuscation of android.support.v7.internal.view.menu.**
+# to avoid problem on Samsung 4.2.2 devices with appcompat v21
+# see https://code.google.com/p/android/issues/detail?id=78377
+-keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
+>>>>>>> 2532b82... Set up Robolectric
