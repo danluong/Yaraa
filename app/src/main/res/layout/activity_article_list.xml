@@ -1,5 +1,4 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -9,22 +8,26 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <include
             android:id="@+id/toolbar"
+            layout="@layout/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/toolbar"/>
+            android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/list"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginTop="?attr/actionBarSize">
 
-            android:layout_below="@id/toolbar"/>
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
+        </android.support.v4.widget.SwipeRefreshLayout>
     </FrameLayout>
     <!-- The navigation drawer -->
     <android.support.design.widget.NavigationView
@@ -33,5 +36,5 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer"/>
+        app:menu="@menu/drawer" />
 </android.support.v4.widget.DrawerLayout>

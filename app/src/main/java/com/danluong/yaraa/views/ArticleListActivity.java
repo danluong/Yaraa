@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +36,8 @@ public class ArticleListActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)
     NavigationView mNavigationView;
+    @Bind(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeContainer;
 
     @Bind(R.id.list)
     ListView mListView;
@@ -42,6 +45,7 @@ public class ArticleListActivity extends AppCompatActivity {
     RedditApi mRedditApi;
     List<Child> mArticleList = new ArrayList<>();
     ChildAdapter mAdapter;
+    String mCurrentTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +53,23 @@ public class ArticleListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
 
-        String title = getResources().getString(R.string.default_sub);
-        mToolbar.setTitle(title);
+        mCurrentTitle = getResources().getString(R.string.default_sub);
+        mToolbar.setTitle(mCurrentTitle);
 
         setupNavDrawer();
 
         setupArticleList();
-        articleQuery(title);
+        articleQuery(mCurrentTitle);
+
+        mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                articleQuery(mCurrentTitle);
+            }
+        });
 
     }
 
@@ -81,6 +95,8 @@ public class ArticleListActivity extends AppCompatActivity {
                 String title = menuItem.getTitle().toString();
                 articleQuery(title.toString());
                 mToolbar.setTitle(title);
+                mCurrentTitle = title;
+
                 return true;
             }
         });
@@ -96,7 +112,7 @@ public class ArticleListActivity extends AppCompatActivity {
 
     }
 
-    private void articleQuery(String sub){
+    private void articleQuery(String sub) {
         mAdapter.clear();
         mArticleList.clear();
 
@@ -106,6 +122,8 @@ public class ArticleListActivity extends AppCompatActivity {
             public void success(Listing articles, Response response) {
                 mArticleList = articles.getData().getChildren();
                 updateListView(mArticleList);
+                mSwipeContainer.setRefreshing(false);
+
             }
 
             @Override
@@ -116,6 +134,7 @@ public class ArticleListActivity extends AppCompatActivity {
             }
         });
     }
+
     void updateListView(List<Child> articleList) {
         mAdapter.addAll(articleList);
         mAdapter.notifyDataSetChanged();
