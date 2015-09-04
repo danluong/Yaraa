@@ -1,12 +1,19 @@
 <resources>
     <string name="app_name">Yaraa</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_onboard">OnboardActivity</string>
     <string name="title_activity_intro">IntroActivity</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="button_text_listarticles">New Button</string>
     <string name="title_activity_article_list">ArticleListActivity</string>
+
+    <string name="nav_drawer_open">Nav Open</string>
+    <string name="nav_drawer_close">Nav Closed</string>
+    <string name="nav_item_hot">hot</string>
+    <string name="nav_item_new">new</string>
+    <string name="nav_item_top">top</string>
+    <string name="drawer_header_text">@string/app_name</string>
+    <string name="default_sub">@string/nav_item_hot</string>
+
 </resources>

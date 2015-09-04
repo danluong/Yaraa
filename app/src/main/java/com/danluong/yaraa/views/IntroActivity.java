@@ -3,7 +3,6 @@ package com.danluong.yaraa.views;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.danluong.yaraa.R;
@@ -24,9 +23,8 @@ public class IntroActivity extends AppIntro {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("firstRun", false);
         editor.commit();
-        Log.d(IntroActivity.class.toString(), "isInitialAppLaunch set false");
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ArticleListActivity.class);
         startActivity(intent);
     }
 

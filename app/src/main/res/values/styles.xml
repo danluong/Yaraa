@@ -4,12 +4,11 @@
     <style name="AppTheme" parent="AppTheme.Base"/>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorPrimary">@color/primary</item>
-        <item name="android:windowBackground">@color/window_background</item>
-
-        <item name="colorControlHighlight">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
     </style>
 
     <style name="AppTheme.BrandedLaunch" parent="AppTheme.Base">

@@ -3,13 +3,12 @@ package com.danluong.yaraa;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 
+import com.danluong.yaraa.views.ArticleListActivity;
 import com.danluong.yaraa.views.IntroActivity;
-import com.danluong.yaraa.views.MainActivity;
 
 
-public class StartActivity extends ActionBarActivity {
+public class StartActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,7 @@ public class StartActivity extends ActionBarActivity {
         {
             intent = new Intent(this, IntroActivity.class);
         } else {
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, ArticleListActivity.class);
         }
         startActivity(intent);
         finish();
