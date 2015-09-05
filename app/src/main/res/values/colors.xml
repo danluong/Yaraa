@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">@color/cyan_500</color>
-    <color name="primary_dark">@color/background_material_dark</color>
-    <color name="accent">@color/green_500</color>
+    <color name="primary">#3F51B5</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="accent">#FF4081</color>
     <color name="window_background">@color/background_material_light</color>
 
 

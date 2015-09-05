@@ -1,7 +1,13 @@
 package com.danluong.yaraa.views;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,12 +30,22 @@ import retrofit.client.Response;
 
 public class ArticleListActivity extends AppCompatActivity {
 
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @Bind(R.id.navigation_view)
+    NavigationView mNavigationView;
+    @Bind(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeContainer;
+
     @Bind(R.id.list)
-    ListView listview;
+    ListView mListView;
 
     RedditApi mRedditApi;
     List<Child> mArticleList = new ArrayList<>();
     ChildAdapter mAdapter;
+    String mCurrentTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +53,86 @@ public class ArticleListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
 
+        mCurrentTitle = getResources().getString(R.string.default_sub);
+        mToolbar.setTitle(mCurrentTitle);
+
+        setupNavDrawer();
+
+        setupArticleList();
+        articleQuery(mCurrentTitle);
+
+        mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                articleQuery(mCurrentTitle);
+            }
+        });
+
+    }
+
+    private void setupNavDrawer() {
+
+        setSupportActionBar(mToolbar);
+
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, mToolbar,
+                R.string.nav_drawer_open, R.string.nav_drawer_close
+        );
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.syncState();
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+
+                String title = menuItem.getTitle().toString();
+                articleQuery(title.toString());
+                mToolbar.setTitle(title);
+                mCurrentTitle = title;
+
+                return true;
+            }
+        });
+    }
+
+    private void setupArticleList() {
+
         mAdapter = new ChildAdapter(this, mArticleList);
 
-        listview.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         mRedditApi = new RedditApi();
-        mRedditApi.getmService().listArticles("top", new Callback<Listing>() {
+
+    }
+
+    private void articleQuery(String sub) {
+        mAdapter.clear();
+        mArticleList.clear();
+
+        mRedditApi.getmService().listArticles(sub, new Callback<Listing>() {
 
             @Override
             public void success(Listing articles, Response response) {
                 mArticleList = articles.getData().getChildren();
                 updateListView(mArticleList);
+                mSwipeContainer.setRefreshing(false);
+
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(ArticleListActivity.class.toString(), "RetrofitError error: " + error.getResponse().getReason());
+                if (error.getResponse() != null) {
+                    Log.d(ArticleListActivity.class.toString(), "RetrofitError error: " + error.getResponse().getReason());
+                }
             }
         });
-
     }
 
     void updateListView(List<Child> articleList) {
@@ -77,10 +154,14 @@ public class ArticleListActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_settings:
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
