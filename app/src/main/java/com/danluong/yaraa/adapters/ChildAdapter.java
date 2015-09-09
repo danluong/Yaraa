@@ -66,4 +66,5 @@ public class ChildAdapter extends ArrayAdapter<Child> {
         return convertView;
 
     }
+
 }

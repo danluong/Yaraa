@@ -1,5 +1,7 @@
 package com.danluong.yaraa.views;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,7 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.danluong.yaraa.R;
 import com.danluong.yaraa.adapters.ChildAdapter;
@@ -71,6 +76,17 @@ public class ArticleListActivity extends AppCompatActivity {
             }
         });
 
+        mListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Child element = (Child) mListView.getItemAtPosition(position);
+                        String url = element.getData().getUrl();
+                        openBrowser(url);
+                        Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     private void setupNavDrawer() {
@@ -93,7 +109,7 @@ public class ArticleListActivity extends AppCompatActivity {
                 mDrawerLayout.closeDrawers();
 
                 String title = menuItem.getTitle().toString();
-                articleQuery(title.toString());
+                articleQuery(title);
                 mToolbar.setTitle(title);
                 mCurrentTitle = title;
 
@@ -103,13 +119,9 @@ public class ArticleListActivity extends AppCompatActivity {
     }
 
     private void setupArticleList() {
-
         mAdapter = new ChildAdapter(this, mArticleList);
-
         mListView.setAdapter(mAdapter);
-
         mRedditApi = new RedditApi();
-
     }
 
     private void articleQuery(String sub) {
@@ -164,4 +176,16 @@ public class ArticleListActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private static final String HTTPS = "https://";
+    private static final String HTTP = "http://";
+
+    public void openBrowser(String url) {
+        if (!url.startsWith(HTTP) && !url.startsWith(HTTPS)) {
+            url = HTTP + url;
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
+    }
+
 }
