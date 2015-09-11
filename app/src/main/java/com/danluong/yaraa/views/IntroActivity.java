@@ -17,7 +17,7 @@ public class IntroActivity extends AppIntro {
     }
 
     private void loadMainActivity() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("firstRun", false);
         editor.commit();
