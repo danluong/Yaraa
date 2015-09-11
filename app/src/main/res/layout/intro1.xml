@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_500"
+    android:background="#222222"
     android:layout_weight="10"
     android:id="@+id/main">
 
@@ -17,7 +17,7 @@
         android:textColor="#ffffff"
         android:paddingRight="32dp"
         android:textSize="28sp"
-        android:text="Slide 4 title"/>
+        android:text="@string/intro_1_title"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/ic_slide4"/>
+            android:src="@drawable/ic_slide1"/>
     </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
@@ -44,9 +44,7 @@
         android:paddingLeft="64dp"
         android:paddingRight="64dp"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:onClick="getStarted"
-        android:text="GET STARTED"/>
+        android:text="@string/intro_1_text"/>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="64dp" />

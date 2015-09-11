@@ -3,6 +3,7 @@ package com.danluong.yaraa.views;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.danluong.yaraa.R;
@@ -11,15 +12,12 @@ import com.github.paolorotolo.appintro.AppIntro;
 public class IntroActivity extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
-        addSlide(SampleSlide.newInstance(R.layout.intro));
+        addSlide(SampleSlide.newInstance(R.layout.intro1));
         addSlide(SampleSlide.newInstance(R.layout.intro2));
-        addSlide(SampleSlide.newInstance(R.layout.intro3));
-        addSlide(SampleSlide.newInstance(R.layout.intro4));
     }
 
     private void loadMainActivity() {
-
-        SharedPreferences settings = getSharedPreferences("prefs", 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("firstRun", false);
         editor.commit();

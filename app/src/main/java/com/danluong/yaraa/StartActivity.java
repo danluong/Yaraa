@@ -3,6 +3,7 @@ package com.danluong.yaraa;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.danluong.yaraa.views.ArticleListActivity;
 import com.danluong.yaraa.views.IntroActivity;
@@ -19,7 +20,8 @@ public class StartActivity extends BaseActivity {
     }
 
     void switchActivity(){
-        SharedPreferences settings = getSharedPreferences("prefs", 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
         boolean firstRun = settings.getBoolean("firstRun", true);
         Intent intent;
         if ( firstRun )

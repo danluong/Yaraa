@@ -10,8 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -72,6 +70,7 @@ public class ArticleListActivity extends AppCompatActivity {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
+                resetList();
                 articleQuery(mCurrentTitle);
             }
         });
@@ -83,7 +82,6 @@ public class ArticleListActivity extends AppCompatActivity {
                         Child element = (Child) mListView.getItemAtPosition(position);
                         String url = element.getData().getUrl();
                         openBrowser(url);
-                        Toast.makeText(getApplicationContext(), url, Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -93,26 +91,32 @@ public class ArticleListActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar,
                 R.string.nav_drawer_open, R.string.nav_drawer_close
         );
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerListener(drawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        mDrawerToggle.syncState();
+        drawerToggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
+                if (menuItem.getGroupId() == R.id.navigation_group_categories) {
+                    menuItem.setChecked(true);
+                    mDrawerLayout.closeDrawers();
 
-                String title = menuItem.getTitle().toString();
-                articleQuery(title);
-                mToolbar.setTitle(title);
-                mCurrentTitle = title;
+                    String title = menuItem.getTitle().toString();
+                    mToolbar.setTitle(title);
+                    mCurrentTitle = title;
 
+                    resetList();
+                    articleQuery(title);
+                } else if (menuItem.getItemId() == R.id.navigation_item_setttings) {
+                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                    startActivity(intent);
+                }
                 return true;
             }
         });
@@ -125,38 +129,32 @@ public class ArticleListActivity extends AppCompatActivity {
     }
 
     private void articleQuery(String sub) {
-        mAdapter.clear();
-        mArticleList.clear();
-
         mRedditApi.getmService().listArticles(sub, new Callback<Listing>() {
 
             @Override
             public void success(Listing articles, Response response) {
                 mArticleList = articles.getData().getChildren();
-                updateListView(mArticleList);
+                updateList(mArticleList);
                 mSwipeContainer.setRefreshing(false);
-
             }
 
             @Override
             public void failure(RetrofitError error) {
                 if (error.getResponse() != null) {
-                    Log.d(ArticleListActivity.class.toString(), "RetrofitError error: " + error.getResponse().getReason());
+                    Toast.makeText(getApplicationContext(), R.string.error_no_connection, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    void updateListView(List<Child> articleList) {
+    void updateList(List<Child> articleList) {
         mAdapter.addAll(articleList);
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_article_list, menu);
-        return true;
+    void resetList(){
+        mArticleList.clear();
+        mAdapter.clear();
     }
 
     @Override
@@ -169,8 +167,6 @@ public class ArticleListActivity extends AppCompatActivity {
         switch (id) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_settings:
                 return true;
         }
 

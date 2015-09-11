@@ -28,8 +28,8 @@
             android:label="@string/title_activity_article_list" >
         </activity>
         <activity
-            android:name=".BaseActivity"
-            android:label="@string/title_activity_base" >
+            android:name=".views.SettingsActivity"
+            android:label="@string/title_activity_settings">
         </activity>
     </application>
 
