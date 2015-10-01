@@ -23,7 +23,7 @@ public class StartActivity extends BaseActivity {
     }
 
     void switchActivity(){
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         boolean firstRun = settings.getBoolean("firstRun", true);
         Intent intent;
