@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,7 +25,9 @@ import com.danluong.yaraa.models.listing.Child;
 import com.danluong.yaraa.models.listing.Listing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,7 +35,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ArticleListActivity extends AppCompatActivity {
+public class ArticleListActivity extends AppCompatActivity implements AbsListView.OnScrollListener {
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -46,9 +50,12 @@ public class ArticleListActivity extends AppCompatActivity {
     ListView mListView;
 
     RedditApi mRedditApi;
-    List<Child> mArticleList = new ArrayList<>();
+    Listing mListing;
+    List<Child> mArticleItemsList = new ArrayList<>();
     ChildAdapter mAdapter;
     String mCurrentTitle;
+
+    Map<String, String> queryMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +69,7 @@ public class ArticleListActivity extends AppCompatActivity {
         setupNavDrawer();
 
         setupArticleList();
-        articleQuery(mCurrentTitle);
+        articleQuery(mCurrentTitle, null);
 
         mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -71,7 +78,7 @@ public class ArticleListActivity extends AppCompatActivity {
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
                 resetList();
-                articleQuery(mCurrentTitle);
+                articleQuery(mCurrentTitle, null);
             }
         });
 
@@ -85,6 +92,14 @@ public class ArticleListActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mArticleItemsList.isEmpty()) {
+            articleQuery(mCurrentTitle, null);
+        }
     }
 
     private void setupNavDrawer() {
@@ -112,7 +127,7 @@ public class ArticleListActivity extends AppCompatActivity {
                     mCurrentTitle = title;
 
                     resetList();
-                    articleQuery(title);
+                    articleQuery(mCurrentTitle, null);
                 } else if (menuItem.getItemId() == R.id.navigation_item_setttings) {
                     Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                     startActivity(intent);
@@ -123,19 +138,43 @@ public class ArticleListActivity extends AppCompatActivity {
     }
 
     private void setupArticleList() {
-        mAdapter = new ChildAdapter(this, mArticleList);
+        mAdapter = new ChildAdapter(this, mArticleItemsList);
         mListView.setAdapter(mAdapter);
         mRedditApi = new RedditApi();
+        mListView.setOnScrollListener(this);
     }
 
-    private void articleQuery(String sub) {
-        mRedditApi.getmService().listArticles(sub, new Callback<Listing>() {
+    private void addPaginatedArticles() {
+        queryMap.clear();
+        queryMap.put("after", mListing.getData().getAfter());
+        articleQuery(mCurrentTitle, queryMap);
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if ((view.getLastVisiblePosition() == view.getAdapter().getCount() - 1) && (scrollState == SCROLL_STATE_IDLE)) {
+            //It is scrolled all the way down here
+            addPaginatedArticles();
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    }
+
+    private void articleQuery(String sub, Map<String, String> params) {
+        Snackbar.make(mDrawerLayout, R.string.loading_posts, Snackbar.LENGTH_SHORT).show();
+
+        mRedditApi.getmService().listArticles(sub, params, new Callback<Listing>() {
 
             @Override
             public void success(Listing articles, Response response) {
-                mArticleList = articles.getData().getChildren();
-                updateList(mArticleList);
+                mListing = articles;
+                mArticleItemsList = articles.getData().getChildren();
+                updateList(mArticleItemsList);
                 mSwipeContainer.setRefreshing(false);
+                Snackbar.make(mDrawerLayout, R.string.loading_posts_done, Snackbar.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -152,8 +191,8 @@ public class ArticleListActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    void resetList(){
-        mArticleList.clear();
+    void resetList() {
+        mArticleItemsList.clear();
         mAdapter.clear();
     }
 

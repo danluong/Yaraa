@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import com.crashlytics.android.Crashlytics;
 import com.danluong.yaraa.views.ArticleListActivity;
 import com.danluong.yaraa.views.IntroActivity;
+
 import io.fabric.sdk.android.Fabric;
 
 
@@ -22,13 +23,12 @@ public class StartActivity extends BaseActivity {
         switchActivity();
     }
 
-    void switchActivity(){
+    void switchActivity() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         boolean firstRun = settings.getBoolean("firstRun", true);
         Intent intent;
-        if ( firstRun )
-        {
+        if (firstRun) {
             intent = new Intent(this, IntroActivity.class);
         } else {
             intent = new Intent(this, ArticleListActivity.class);

@@ -3,10 +3,13 @@ package com.danluong.yaraa.apis;
 import com.danluong.yaraa.models.listing.Listing;
 import com.danluong.yaraa.models.user.User;
 
+import java.util.Map;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit.http.QueryMap;
 
 /**
  * Created by dluong on 8/6/2015.
@@ -30,7 +33,7 @@ public class RedditApi {
 
     public interface RedditService {
         @GET("/{sub}.json")
-        void listArticles(@Path("sub") String sub, Callback<Listing> articles);
+        void listArticles(@Path("sub") String sub, @QueryMap Map<String, String> params, Callback<Listing> articles);
 
         @GET("/user/{username}/about.json")
         void listUser(@Path("username") String userId, Callback<User> user);

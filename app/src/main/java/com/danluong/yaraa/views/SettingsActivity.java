@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             root.addView(mToolbar);
         }
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

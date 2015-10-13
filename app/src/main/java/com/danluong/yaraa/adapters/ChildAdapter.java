@@ -31,8 +31,6 @@ public class ChildAdapter extends ArrayAdapter<Child> {
         ImageView image;
         @Bind(R.id.listview_item_textview_heading)
         TextView title;
-        @Bind(R.id.listview_item_textview_subheading)
-        TextView author;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
@@ -61,7 +59,7 @@ public class ChildAdapter extends ArrayAdapter<Child> {
                 .crossFade()
                 .into(viewHolder.image);
         viewHolder.title.setText(element.getData().getTitle());
-        viewHolder.author.setText(element.getData().getAuthor());
+
         // Return the completed view to render on screen
         return convertView;
 
