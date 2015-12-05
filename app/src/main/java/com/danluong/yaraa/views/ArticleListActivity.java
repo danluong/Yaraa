@@ -163,7 +163,8 @@ public class ArticleListActivity extends AppCompatActivity implements AbsListVie
     }
 
     private void articleQuery(String sub, Map<String, String> params) {
-        Snackbar.make(mDrawerLayout, R.string.loading_posts, Snackbar.LENGTH_SHORT).show();
+        final Snackbar snackbar= Snackbar.make(mDrawerLayout, R.string.loading_posts, Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
 
         mRedditApi.getmService().listArticles(sub, params, new Callback<Listing>() {
 
@@ -173,20 +174,21 @@ public class ArticleListActivity extends AppCompatActivity implements AbsListVie
                 mArticleItemsList = articles.getData().getChildren();
                 updateList(mArticleItemsList);
                 mSwipeContainer.setRefreshing(false);
-                Snackbar.make(mDrawerLayout, R.string.loading_posts_done, Snackbar.LENGTH_SHORT).show();
-
+                snackbar.setText(R.string.loading_posts_done);
+                snackbar.dismiss();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 if (error.getResponse() != null) {
-                    Toast.makeText(getApplicationContext(), R.string.error_no_connection, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(mDrawerLayout, R.string.error_no_connection, Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    void updateList(List<Child> articleList) {
+    void updateList(List<Child
+            > articleList) {
         mAdapter.addAll(articleList);
         mAdapter.notifyDataSetChanged();
     }

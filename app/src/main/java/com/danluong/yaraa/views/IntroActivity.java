@@ -13,7 +13,6 @@ public class IntroActivity extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
         addSlide(SampleSlide.newInstance(R.layout.intro1));
-        addSlide(SampleSlide.newInstance(R.layout.intro2));
     }
 
     private void loadMainActivity() {

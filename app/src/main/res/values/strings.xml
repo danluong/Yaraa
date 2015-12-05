@@ -17,7 +17,7 @@
     <string name="drawer_header_text">@string/app_name</string>
     <string name="default_sub">@string/nav_item_hot</string>
     <string name="intro_1_title">Hey Yaraa!</string>
-    <string name="intro_1_text">This is a simple application demo for using Retrofit with the Reddit API. Eventually it will include best practices and testing.</string>
+    <string name="intro_1_text">This is a simple application demo for using Retrofit with the Reddit API.</string>
     <string name="intro_2_title">Read More!</string>
     <string name="intro_2_text">GET STARTED</string>
     <string name="error_no_connection">Load error: Is a data connection available?</string>
